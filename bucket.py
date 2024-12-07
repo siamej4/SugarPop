@@ -10,6 +10,7 @@ import pygame as pg
 import pymunk
 from settings import SCALE, HEIGHT, WIDTH
 from math import sqrt
+import sound
 
 class Bucket:
     def __init__(self, space, x, y, width, height, needed_sugar):
@@ -28,6 +29,8 @@ class Bucket:
         self.height = height / SCALE
         self.count = 0  # Counter for collected sugar grains
         self.needed_sugar = needed_sugar
+        self.sound = sound.Sound()
+        
 
         wall_thickness = 0.2  # Thickness of the walls in physics units
 
@@ -60,6 +63,9 @@ class Bucket:
         space.add(self.bottom_wall)
         
         self.exploded = False  # Track if the bucket has exploded
+        
+        
+        
 
     def explode(self, grains):
         """
@@ -67,6 +73,7 @@ class Bucket:
         
         :param grains: List of sugar grain objects in the game.
         """
+        self.sound.play_sound('boom')
         if self.exploded:
             return  # Prevent multiple explosions
 
@@ -140,7 +147,10 @@ class Bucket:
 
         # Check if the grain's position is within the bucket's bounding box
         if left <= grain_pos.x <= right and bottom <= grain_pos.y <= top:
+            previous_count = self.count
             self.count += 1
+            if self.count > previous_count:
+                self.sound.play_sound("bucket_ping")
             return True  # Indicate that the grain was collected
 
         return False  # Grain not collected

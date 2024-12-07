@@ -18,6 +18,8 @@ import sugar_grain
 import bucket
 import level
 import message_display
+import sound
+pg.mixer.pre_init(44100,-16,2,512)
 
 
 class Game:
@@ -38,6 +40,7 @@ class Game:
         # Iterations defaults to 10. Higher is more accurate collison detection
         self.space.iterations = 30 
         self.is_paused = False
+        self.sound = sound.Sound()
 
         self.drawing_lines = []
         self.sugar_grains = []
@@ -172,6 +175,8 @@ class Game:
                 # Check if it's time to stop
                 if len(self.sugar_grains) >= self.total_sugar_count:
                     self.level_grain_dropping = False
+                    
+
 
     def draw_hud(self):
         """Draw the HUD displaying the number of grains."""
@@ -180,7 +185,10 @@ class Game:
             text_surface = self.font.render(f'{self.total_sugar_count - len(self.sugar_grains)}', True, (255, 255, 255))
             # Draw the text surface on the screen
             self.screen.blit(text_surface, (10, 10))  # Position at top-left corner
-
+            #Hud for level
+        
+             
+            
     def draw(self):
         '''Draw the overall game. Should call individual item draw() methods'''
         # Clear the screen
@@ -192,6 +200,7 @@ class Game:
     
         for bucket in self.buckets:
             bucket.draw(self.screen)
+            
 
         # Draw each sugar grain
         for grain in self.sugar_grains:
@@ -230,6 +239,7 @@ class Game:
 
     def check_events(self):
         '''Check for keyboard and mouse events'''
+    
         for event in pg.event.get():
             if event.type == EXIT_APP or event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 pg.quit()
@@ -248,7 +258,17 @@ class Game:
                 else:
                     self.message_display.show_message("Paused", 2)  # Show Paused
                     self.is_paused = True
-                
+                    
+            #Implementing a gravity switch  
+            elif event.type == pg.KEYDOWN and event.key == pg.K_g:
+                # Check the current gravity direction and reverse it
+                if self.space.gravity == (0, -9):  # Reversed gravity
+                    self.space.gravity = (0, 9)  # Restore normal gravity
+                    self.message_display.show_message("Gravity Up", 2)  # Gravity upwards
+                else:
+                    self.space.gravity = (0, -9)  # Reverse gravity
+                    self.message_display.show_message("Gravity Down", 2)  # Gravity downwards
+            
             elif event.type == pg.MOUSEBUTTONDOWN:
                 self.mouse_down = True
                 # Get mouse position and start a new dynamic line
@@ -281,7 +301,8 @@ class Game:
                 self.current_level += 1
                 if not self.load_level(self.current_level):
                     self.message_display.show_message("You Win!", 5)  # End of game message
-                    pg.time.set_timer(EXIT_APP, 5000)  # Quit game after 5 seconds
+                    self.sound.play_sound('clapping')
+                    pg.time.set_timer(EXIT_APP, 8000)  # Quit game after 5 seconds
                 else:
                     self.message_display.show_message(f"Level {self.current_level} Start!", 2)
                     

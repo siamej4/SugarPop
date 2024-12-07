@@ -3,8 +3,18 @@
     "statics": [
         {
             "x1": 100,
-            "y1": 500,
-            "x2": 300,
+            "y1": 250,
+            "x2": 150,
+            "y2": 125,
+            "color": "gray",
+            "line_width": 3,
+            "friction": 0.3,
+            "restitution": 0.5
+        },
+        {
+            "x1": 250,
+            "y1": 250,
+            "x2": 250,
             "y2": 250,
             "color": "gray",
             "line_width": 3,
@@ -24,7 +34,7 @@
     ],
     "buckets": [
         {
-            "x": 300,
+            "x": 480,
             "y": 50,
             "width": 50,
             "height": 40,

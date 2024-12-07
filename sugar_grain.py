@@ -28,7 +28,7 @@ class sugar_grain:
         mass = 1.0
         size = 2 / SCALE  # Size of the square in physics units
         moment = pymunk.moment_for_box(mass, (size, size))
-
+        
         self.body = pymunk.Body(mass, moment)
         self.body.position = pos_x, pos_y
 
@@ -36,11 +36,17 @@ class sugar_grain:
         s = size / 2  # Half the size for vertex calculations
         vertices = [(-s, -s), (-s, s), (s, s), (s, -s)]
         self.shape = pymunk.Poly(self.body, vertices)
+        self.shape.elasticity = 0.1 #To reduce the bouncing of the sugar grains
+        self.shape.friction = 0.8 #More friction to slide less
+        
+
         self.shape.friction = friction
         self.shape.elasticity = 0.5  # Adjust as needed
 
         # Add the body and shape to the space
         self.space.add(self.body, self.shape)
+    def reset_velocity(self):
+        self.body.velocity (0, 0)
         
     def update(self):
         """
@@ -48,6 +54,7 @@ class sugar_grain:
         In this case, Pymunk handles the physics, so nothing is needed here.
         """
         pass
+        
 
     def draw(self, screen):
         """
