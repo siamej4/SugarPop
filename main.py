@@ -19,7 +19,7 @@ import bucket
 import level
 import message_display
 import sound
-pg.mixer.pre_init(44100,-16,2,512)
+
 
 
 class Game:

@@ -1,9 +1,8 @@
 import pygame as pg
-import time
 
 
 class Sound():
-    def __init__(self, duration):
+    def __init__(self):
         pg.init()
         pg.mixer
         
@@ -12,16 +11,11 @@ class Sound():
                     'boom': pg.mixer.Sound('./sounds/BOOM sound effect.mp3'), 
                     'clapping': pg.mixer.Sound('./sounds/Clapping Sound Effects.mp3')}
         
-        self.play_until = 0
-        self.play_until = time.time() + duration
-        
-        
        
     
-    def play_sound(self, sound_name, duration):
-            self.sounds[sound_name].play()
-            
-            
+    def play_sound(self, sound_name):
+        self.sounds[sound_name].play()
     
-            
+        
+        
         
